@@ -21,5 +21,6 @@ yarn-error.log*
 
 server/docker-compose.yml
 server/.env
+server/config.env
 client/cypress/videos
 client/cypress/screenshots
