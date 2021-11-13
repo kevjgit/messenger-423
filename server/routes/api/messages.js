@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const { Conversation, Message } = require("../../db/models");
 const onlineUsers = require("../../onlineUsers");
+const { Op } = require("sequelize");
+
 
 // expects {recipientId, text, conversationId } in body (conversationId will be null if no conversation exists yet)
 router.post("/", async (req, res, next) => {
@@ -40,6 +42,53 @@ router.post("/", async (req, res, next) => {
     res.json({ message, sender });
   } catch (error) {
     next(error);
+  }
+});
+
+ 
+// updates all messages matching 'otherUserId' and 'conversationId' to seen.
+router.post('/updateSeen', async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+    
+    const {conversationId, otherUserId} = req.body;
+
+    // if a conversationId does not exist, then ignore the update.
+    if(!conversationId){
+      return res.status(304).json({
+        status: 'unchanged', 
+        data: {}
+      })
+    }
+
+    // update seen property to all unread messages in the conversation to 'true'
+    const messagesChangedCount = await Message.update({seen: true}, {
+      where: {
+        [Op.and]: [
+          {conversationId: conversationId},
+          {seen: false},
+          {senderId: otherUserId}
+        ]
+      }
+    });
+    // make database call if changes were made to the backend, otherwise ignore.
+    const updatedMessages = messagesChangedCount > 0 ? await Message.findAll({
+      where: 
+        {
+          conversationId: conversationId
+        }
+    }) : [];
+
+    return res.status(200).json({
+      status: messagesChangedCount > 0 ? 'changed' : 'unchanged',
+      conversationId: conversationId,
+      messages: updatedMessages
+    });
+
+  }catch(err){
+    next(err);
   }
 });
 
