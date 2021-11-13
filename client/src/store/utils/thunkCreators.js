@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  updateConversation,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -116,4 +117,24 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+export const updateUnseenMessageCount = (conversationId, otherUserId) => async (dispatch) => {
+  try{
+    const { data } = await axios.post(`/api/messages/updateSeen`, {conversationId: conversationId, otherUserId: otherUserId});  
+    const {status, messages} = {...data}
+    if (status === 'changed'){
+      dispatch(updateConversation(conversationId, messages));
+      updateMessages(conversationId, messages);
+    }
+  }catch(error){
+    console.log(error);
+  }
+}
+
+const updateMessages = (conversationId, messages) => {
+  socket.emit("update-messages", {
+    id: conversationId,
+    messages 
+  });
 };
