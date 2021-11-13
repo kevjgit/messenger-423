@@ -24,18 +24,27 @@ const useStyles = makeStyles(() => ({
   bubble: {
     background: "#F4F6FA",
     borderRadius: "10px 10px 0 10px"
-  }
+  },
+  photo: {
+    borderRadius: '50%', 
+    width: '15px', 
+    height: '15px'
+  } 
 }));
 
 const SenderBubble = (props) => {
   const classes = useStyles();
-  const { time, text } = props;
+  const { time, text, seenPhoto } = props;
+  console.log('Seen Photo is : ', seenPhoto);
   return (
     <Box className={classes.root}>
       <Typography className={classes.date}>{time}</Typography>
       <Box className={classes.bubble}>
         <Typography className={classes.text}>{text}</Typography>
       </Box>
+      {seenPhoto ? (<Box className={classes.bubble}>
+        <Typography><img className={classes.photo} src={seenPhoto} alt="person"/></Typography>
+      </Box>) : ''}
     </Box>
   );
 };
