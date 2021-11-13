@@ -80,3 +80,16 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     }
   });
 };
+
+export const udpateConversationInStore = (state, conversationId, messages)=>{
+  console.log('state in updateConversationInStore is : ', state);
+  return state.map((convo)=> {
+    if(convo.id === conversationId){
+      const convoCopy = {...convo};
+      convoCopy.messages = messages
+      return convoCopy
+    }else{
+      return convo
+    }  
+  });
+}
