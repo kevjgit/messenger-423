@@ -119,16 +119,23 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-export const updateUnseenMessageCount = (conversationId, otherUserId) => async (dispatch) => {
+export const updateUnseenMessageCount = (conversationId, otherUserId, messages) => async (dispatch) => {
   try{
-    const { data } = await axios.post(`/api/messages/updateSeen`, {conversationId: conversationId, otherUserId: otherUserId});  
-    const {status, messages} = {...data}
+    const modifiedMessages = messages.map((message) => {
+      if(!message.seen && message.senderId === otherUserId){
+        message.seen = true;
+      }
+      return message;
+    });
+
+    const {data} = await axios.patch(`/api/messages/seen-status`, {conversationId: conversationId, otherUserId: otherUserId});  
+    const {status} = data
     if (status === 'changed'){
-      dispatch(updateConversation(conversationId, messages));
-      updateMessages(conversationId, messages);
+      dispatch(updateConversation(conversationId, modifiedMessages));
+      updateMessages(conversationId, modifiedMessages);
     }
   }catch(error){
-    console.log(error);
+    console.error(error);
   }
 }
 
