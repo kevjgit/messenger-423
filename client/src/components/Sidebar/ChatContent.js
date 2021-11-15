@@ -30,15 +30,15 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: 'flex-end', 
     position: 'absolute',
     borderRadius: theme.shape.borderRadius = 40, 
-    paddingTop: theme.spacing = 0,
-    paddingBottom: theme.spacing = 0,
-    paddingLeft: theme.spacing = 5,
-    paddingRight: theme.spacing = 5,
+    paddingTop: theme.spacing(0),
+    paddingBottom: theme.spacing(0),
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
     color: theme.palette.common.white,
     fontSize: theme.typography.fontSize = 10,
     fontWeight: theme.typography.fontWeightBold,
-    marginRight: theme.spacing = 20, 
-    marginTop: theme.spacing = 15, 
+    marginRight: theme.spacing(20), 
+    marginTop: theme.spacing(15), 
   }
 }));
 
