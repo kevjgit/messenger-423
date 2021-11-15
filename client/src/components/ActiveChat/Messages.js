@@ -5,7 +5,15 @@ import moment from "moment";
 
 const Messages = (props) => {
   const { messages, otherUser, userId} = props;
-  const lastMessageBySender = messages ? messages.slice().reverse().find((message) => message.seen && message.senderId === userId) : ''
+  let lastMessageBySender = null;
+  
+  for(let i=messages.length-1; i>0; i--){
+    let currentMessage = messages[i];
+    if(currentMessage.seen && currentMessage.senderId === userId){
+      lastMessageBySender = currentMessage;
+      break;
+    }
+  }
 
   return (
     <Box>
