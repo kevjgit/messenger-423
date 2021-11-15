@@ -41,9 +41,9 @@ const SenderBubble = (props) => {
       <Box className={classes.bubble}>
         <Typography className={classes.text}>{text}</Typography>
       </Box>
-      {seenPhoto ? (<Box className={classes.bubble}>
+      {seenPhoto && (<Box className={classes.bubble}>
         <Typography><img className={classes.photo} src={seenPhoto} alt="person"/></Typography>
-      </Box>) : ''}
+      </Box>)}
     </Box>
   );
 };
