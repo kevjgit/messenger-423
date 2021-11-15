@@ -47,24 +47,22 @@ router.post("/", async (req, res, next) => {
 
  
 // updates all messages matching 'otherUserId' and 'conversationId' to seen.
-router.post('/updateSeen', async (req, res, next) => {
+router.patch('/seen-status', async (req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401);
     }
     
     const {conversationId, otherUserId} = req.body;
+    const foundConversation = req.user.id && otherUserId ? await Conversation.findConversation(req.user.id, otherUserId) : false;
 
-    // if a conversationId does not exist, then ignore the update.
-    if(!conversationId){
-      return res.status(304).json({
-        status: 'unchanged', 
-        data: {}
+    if(!foundConversation){
+      return res.status(404).json({
+        status: 'unchanged'
       })
     }
 
-    // update seen property to all unread messages in the conversation to 'true'
-    const messagesChangedCount = await Message.update({seen: true}, {
+    const [messagesChangedCount] = await Message.update({seen: true}, {
       where: {
         [Op.and]: [
           {conversationId: conversationId},
@@ -73,18 +71,9 @@ router.post('/updateSeen', async (req, res, next) => {
         ]
       }
     });
-    // make database call if changes were made to the backend, otherwise ignore.
-    const updatedMessages = messagesChangedCount > 0 ? await Message.findAll({
-      where: 
-        {
-          conversationId: conversationId
-        }
-    }) : [];
 
     return res.status(200).json({
-      status: messagesChangedCount > 0 ? 'changed' : 'unchanged',
-      conversationId: conversationId,
-      messages: updatedMessages
+      status: messagesChangedCount > 0 ? 'changed' : 'unchanged'
     });
 
   }catch(err){
