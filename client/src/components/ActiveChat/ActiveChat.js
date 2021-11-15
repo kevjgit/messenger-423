@@ -4,7 +4,6 @@ import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
 import { connect } from "react-redux";
 import { updateUnseenMessageCount} from "../../store/utils/thunkCreators";
-import { useEffect } from "react";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,13 +26,10 @@ const ActiveChat = (props) => {
   const { user, updateUnseenMessageCount} = props;
   const conversation = props.conversation || {};
   
-  useEffect(() => {
-    // At this point I am in the conversation and I am watching it, so mark all messages sent to me by the other user to True.
-    const unseenMessages = conversation.messages ? conversation.messages.filter((message) => !message.seen) : undefined;
-    if(unseenMessages && unseenMessages.length > 0){
-      updateUnseenMessageCount(conversation.id, conversation.otherUser ? conversation.otherUser.id : '')
-    }
-  });
+  const unseenMessages = conversation.messages?.length && !conversation.messages[conversation.messages.length-1].seen;
+  if(unseenMessages){
+    updateUnseenMessageCount(conversation.id, conversation.otherUser ? conversation.otherUser.id : null, conversation.messages)
+  }
 
   return (
     <Box className={classes.root}>
@@ -74,8 +70,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateUnseenMessageCount: (conversationId, otherUserId) => {
-      dispatch(updateUnseenMessageCount(conversationId, otherUserId));
+    updateUnseenMessageCount: (conversationId, otherUserId, messages) => {
+      dispatch(updateUnseenMessageCount(conversationId, otherUserId, messages));
     },
   };
 }
