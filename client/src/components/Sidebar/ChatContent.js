@@ -32,13 +32,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.shape.borderRadius = 40, 
     paddingTop: theme.spacing(0),
     paddingBottom: theme.spacing(0),
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(5),
+    paddingLeft: theme.spacing(0.6),
+    paddingRight: theme.spacing(0.6),
     color: theme.palette.common.white,
     fontSize: theme.typography.fontSize = 10,
     fontWeight: theme.typography.fontWeightBold,
-    marginRight: theme.spacing(20), 
-    marginTop: theme.spacing(15), 
+    marginRight: theme.spacing(1), 
+    marginTop: theme.spacing(2), 
   }
 }));
 
