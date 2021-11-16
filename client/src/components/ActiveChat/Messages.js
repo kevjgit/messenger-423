@@ -7,7 +7,7 @@ const Messages = (props) => {
   const { messages, otherUser, userId} = props;
   let lastMessageBySender = null;
   
-  for(let i=messages.length-1; i>0; i--){
+  for(let i=messages.length-1; i>=0; i--){
     let currentMessage = messages[i];
     if(currentMessage.seen && currentMessage.senderId === userId){
       lastMessageBySender = currentMessage;
