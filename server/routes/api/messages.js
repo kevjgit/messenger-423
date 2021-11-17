@@ -54,9 +54,9 @@ router.patch('/seen-status', async (req, res, next) => {
     }
     
     const {conversationId, otherUserId} = req.body;
-    const foundConversation = req.user.id && otherUserId ? await Conversation.findConversation(req.user.id, otherUserId) : false;
+    const isValidConversation = req.user.id && otherUserId ? await Conversation.findConversation(req.user.id, otherUserId) : false;
 
-    if(!foundConversation){
+    if(!isValidConversation){
       return res.status(403).json({
         status: 'unchanged'
       })
