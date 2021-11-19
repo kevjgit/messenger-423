@@ -13,7 +13,6 @@ UserConversation.findUserConversation = async function (userId, conversationId) 
         ]
       }
     });
-  
     return userConversation;
   };
 
